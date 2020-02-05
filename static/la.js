@@ -25,11 +25,7 @@
             aka, point in polygon
 
     TODO
-        Add a search by address to pull up all the representatives for a location.
-        Add a form to allow for sending messages to representatives in bulk by jurisdiction scope (e.g., local, City, State)
-        Add other jurisdictions - e.g., Coastal Commission, Army Corp of Engineers
-        Improve linking to resources such as contact information
-        Include representative photos - this is going to be hard - the image names are not standardized...
+        Moved to issues:  https://github.com/CordThomas/find-my-prepresentative/issues
  */
 
 let map;
@@ -51,7 +47,7 @@ const la_city_council_layer_url = 'data/la_city_council_districts.geojson';
 // Source:  https://egis3.lacounty.gov/dataportal/2011/12/06/supervisorial-districts/ - under Download data
 const la_county_supervisors_layer_url = 'data/la_county_supervisorial_districs.geojson';
 // California House of Representatives also known as the Lower Chamber
-// GIS Source:  ﻿https://catalog.data.gov/dataset/tiger-line-shapefile-2018-state-california-current-state-legislative-district-sld-lower-chambe
+// GIS Source:  ﻿https://catalog.data.gov/dataset/tiger-line-shapefile-2018-state-california-current-state-legislative-district-sld-lower-chamber
 // Meta Source:  https://www.assembly.ca.gov/assemblymembers?order=field_member_district&sort=asc
 const ca_house_layer_url = 'data/ca_house_boundaries.geojson';
 // California Senate also known as the Upper Chamber
@@ -119,7 +115,6 @@ function prep_map() {
         zoom : 10,
         layers : [tileLayer, neighborCouncilLayer]
     });
-    //map.fitBounds(neighborCouncilLayer.getBounds(), {padding: [12, 12]});
 
     L.control.scale().addTo(map);
     L.control.layers(overlays, null, {collapsed:false}).addTo(map);
@@ -147,32 +142,41 @@ function prep_map() {
 
     info.addTo(map);
 
-    map.attributionControl.addAttribution('Population data &copy; <a href="http://census.gov/">US Census Bureau</a>');
+    map.attributionControl.addAttribution('Political boundaries: <a href="' +
+        'https://catalog.data.gov/dataset/tiger-line-shapefile-2018-state-california-current-' +
+        'state-legislative-district-sld-upper-chamber">CA Senate</a>, <a href="' +
+        'https://catalog.data.gov/dataset/tiger-line-shapefile-2018-state-california-current-' +
+        'state-legislative-district-sld-lower-chamber">CA Assembly</a>, <a href="' +
+        'https://egis3.lacounty.gov/dataportal/2011/12/06/supervisorial-districts/">LA County</a>, <a href="' +
+        'https://data.lacity.org/A-Well-Run-City/Council-Districts/5v3h-vptv">City Council</a>, <a href="' +
+        'https://data.lacity.org/A-Well-Run-City/Neighborhood-Councils-Certified-/fu65-dz2f">Neighborhood Councils</a>'
+
+    );
 
 
-    let legend = L.control({position: 'bottomright'});
-
-    legend.onAdd = function (map) {
-
-        let div = L.DomUtil.create('div', 'info legend'),
-            grades = [0, 10, 20, 50, 100, 200, 500, 1000],
-            labels = [],
-            from, to;
-
-        for (let i = 0; i < grades.length; i++) {
-            from = grades[i];
-            to = grades[i + 1];
-
-            labels.push(
-                '<i style="background:' + getRandomColor() + '"></i> ' +
-                from + (to ? '&ndash;' + to : '+'));
-        }
-
-        div.innerHTML = labels.join('<br>');
-        return div;
-    };
-
-    legend.addTo(map);
+    // let legend = L.control({position: 'bottomright'});
+    //
+    // legend.onAdd = function (map) {
+    //
+    //     let div = L.DomUtil.create('div', 'info legend'),
+    //         grades = [0, 10, 20, 50, 100, 200, 500, 1000],
+    //         labels = [],
+    //         from, to;
+    //
+    //     for (let i = 0; i < grades.length; i++) {
+    //         from = grades[i];
+    //         to = grades[i + 1];
+    //
+    //         labels.push(
+    //             '<i style="background:' + getRandomColor() + '"></i> ' +
+    //             from + (to ? '&ndash;' + to : '+'));
+    //     }
+    //
+    //     div.innerHTML = labels.join('<br>');
+    //     return div;
+    // };
+    //
+    // legend.addTo(map);
 
     map.addControl( new L.Control.Search({
 		url: 'https://nominatim.openstreetmap.org/search?format=json&q={s}',
@@ -220,11 +224,52 @@ function generateCSSnippet(props) {
  */
 function showRelatedRepresentatives(latlng) {
 
+    html = '';
     let res = leafletPip.pointInLayer(latlng, neighborCouncilLayer);
     if (res.length) {
-        document.getElementById('contacts').innerHTML = res[0].feature.properties.NAME;
+        html += '<div id="neighborhood"><h3>NEIGHBORHOOD COUNCIL</h3>';
+        html += '<b>NC ID: ' + res[0].feature.properties.NC_ID + '</b><br />';
+        html += '<b>' + res[0].feature.properties.NAME + '</b><br />';
+        html += '<a href="'+ res[0].feature.properties.WADDRESS + '">' + res[0].feature.properties.WADDRESS + '</a><br />';
+        html += 'Certified: ' + res[0].feature.properties.CERTIFIED;
+        html += '</div>';
     }
-    console.log(latlng);
+    res = leafletPip.pointInLayer(latlng, laCityCouncilLayer);
+    if (res.length) {
+        html += '<div id="city"><h3>CITY COUNCIL</h3>';
+        html += '<b>City Council: ' + res[0].feature.properties.district_i + '</b><br />';
+        html += '<b>' + res[0].feature.properties.dist_name + '</b><br />';
+        html += '<a href="' + res[0].feature.properties.website + '">' + res[0].feature.properties.website + '</a><br />';
+        html += 'Contact: <a href="' + res[0].feature.properties.contact + '">' + res[0].feature.properties.contact + '</a>';
+        html += '</div>';
+    }
+    res = leafletPip.pointInLayer(latlng, laCountySupervisorLayer);
+    if (res.length) {
+        html += '<div id="county"><h3>COUNTY SUPERVISOR</h3>';
+        html += '<b>Supervisor District: ' + res[0].feature.properties.SUP_DIST_N + '</b><br />';
+        html += '<b>Supervisor: ' + res[0].feature.properties.supervisor + '</b><br />';
+        html += '<a href="' + res[0].feature.properties.website + '">' + res[0].feature.properties.website + '</a>';
+        html += '</div>';
+    }
+    res = leafletPip.pointInLayer(latlng, caHouseLayer);
+    if (res.length) {
+        html += '<div id="assembly"><h3>CALIFORNIA ASSEMBLY</h3>';
+        html += '<b>' + res[0].feature.properties.NAMELSAD + '</b><br />';
+        html += '<b>Representative: ' + res[0].feature.properties.member + '</b><br />';
+        html += '<a href="' + res[0].feature.properties.website + '">' + res[0].feature.properties.website + '</a>';
+        html += '</div>';
+    }
+    res = leafletPip.pointInLayer(latlng, caSenateLayer);
+    if (res.length) {
+        html += '<div id="senate"><h3>CALIFORNIA SENATE</h3>';
+        html += '<b>' + res[0].feature.properties.NAMELSAD + '</b><br />';
+        html += '<b>Senator: ' + res[0].feature.properties.Senator + '</b><br />';
+        html += '<a href="' + res[0].feature.properties.website + '">' + res[0].feature.properties.website + '</a>';
+        html += '</div>';
+    }
+
+    document.getElementById('contacts').innerHTML = html
+
 }
 
 function forEachFeature(feature, layer) {
