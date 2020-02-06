@@ -129,7 +129,7 @@ function prep_map() {
     };
 
     info.update = function (props) {
-        this._div.innerHTML = '<h4>Greater Los Angeles Political Jurisdictions</h4>' +  (props ?
+        this._div.innerHTML = '<h6>Greater Los Angeles Political Jurisdictions</h6>' +  (props ?
             (props.NC_ID ? generateNCSnippet(props)
                 : (props.dist_name ? generataeCCSnippet(props)
                     : (props.SUP_DIST_N ? generateSDSnippet(props)
@@ -224,51 +224,45 @@ function generateCSSnippet(props) {
  */
 function showRelatedRepresentatives(latlng) {
 
-    html = '';
     let res = leafletPip.pointInLayer(latlng, neighborCouncilLayer);
     if (res.length) {
-        html += '<div id="neighborhood"><h3>NEIGHBORHOOD COUNCIL</h3>';
-        html += '<b>NC ID: ' + res[0].feature.properties.NC_ID + '</b><br />';
+        html = '<b>NC ID: ' + res[0].feature.properties.NC_ID + '</b><br />';
         html += '<b>' + res[0].feature.properties.NAME + '</b><br />';
         html += '<a href="'+ res[0].feature.properties.WADDRESS + '">' + res[0].feature.properties.WADDRESS + '</a><br />';
         html += 'Certified: ' + res[0].feature.properties.CERTIFIED;
-        html += '</div>';
+        document.getElementById('contacts_nc').innerHTML = html
     }
     res = leafletPip.pointInLayer(latlng, laCityCouncilLayer);
     if (res.length) {
-        html += '<div id="city"><h3>CITY COUNCIL</h3>';
-        html += '<b>City Council: ' + res[0].feature.properties.district_i + '</b><br />';
+        html = '<b>City Council: ' + res[0].feature.properties.district_i + '</b><br />';
         html += '<b>' + res[0].feature.properties.dist_name + '</b><br />';
         html += '<a href="' + res[0].feature.properties.website + '">' + res[0].feature.properties.website + '</a><br />';
         html += 'Contact: <a href="' + res[0].feature.properties.contact + '">' + res[0].feature.properties.contact + '</a>';
-        html += '</div>';
+        document.getElementById('contacts_cc').innerHTML = html
     }
     res = leafletPip.pointInLayer(latlng, laCountySupervisorLayer);
     if (res.length) {
-        html += '<div id="county"><h3>COUNTY SUPERVISOR</h3>';
-        html += '<b>Supervisor District: ' + res[0].feature.properties.SUP_DIST_N + '</b><br />';
+        html = '<b>Supervisor District: ' + res[0].feature.properties.SUP_DIST_N + '</b><br />';
         html += '<b>Supervisor: ' + res[0].feature.properties.supervisor + '</b><br />';
         html += '<a href="' + res[0].feature.properties.website + '">' + res[0].feature.properties.website + '</a>';
-        html += '</div>';
+        document.getElementById('contacts_cs').innerHTML = html
     }
     res = leafletPip.pointInLayer(latlng, caHouseLayer);
     if (res.length) {
-        html += '<div id="assembly"><h3>CALIFORNIA ASSEMBLY</h3>';
-        html += '<b>' + res[0].feature.properties.NAMELSAD + '</b><br />';
+        html = '<b>' + res[0].feature.properties.NAMELSAD + '</b><br />';
         html += '<b>Representative: ' + res[0].feature.properties.member + '</b><br />';
         html += '<a href="' + res[0].feature.properties.website + '">' + res[0].feature.properties.website + '</a>';
-        html += '</div>';
+        document.getElementById('contacts_caa').innerHTML = html
     }
     res = leafletPip.pointInLayer(latlng, caSenateLayer);
     if (res.length) {
-        html += '<div id="senate"><h3>CALIFORNIA SENATE</h3>';
-        html += '<b>' + res[0].feature.properties.NAMELSAD + '</b><br />';
+        html = '<b>' + res[0].feature.properties.NAMELSAD + '</b><br />';
         html += '<b>Senator: ' + res[0].feature.properties.Senator + '</b><br />';
         html += '<a href="' + res[0].feature.properties.website + '">' + res[0].feature.properties.website + '</a>';
-        html += '</div>';
+        document.getElementById('contacts_cas').innerHTML = html
     }
 
-    document.getElementById('contacts').innerHTML = html
+
 
 }
 

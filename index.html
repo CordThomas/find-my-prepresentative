@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="static/leaflet.css" />
     <link rel="stylesheet" href="static/leaflet-search.min.css" />
+    <link rel="stylesheet" href="https://cdn.metroui.org.ua/v4.3.2/css/metro-all.min.css">
     <link rel="stylesheet" href="static/la.css" />
     <script src="static/jquery-3.4.1.min.js"></script>
     <script src="static/leaflet.js"></script>
@@ -14,9 +16,35 @@
     <title>Los Angeles Representatives</title>
 </head>
 <body onload="prep_map();">
-
-<div id="los_angeles"></div>
-<div id="contacts"></div>
-
+<div class="content">
+    <div id="header">Find My Representative</div>
+    <div id="los_angeles"></div>
+    <!-- colors from https://color.adobe.com/explore?page=1 -->
+    <div class="tiles-grid" id="contacts">
+        <div style="background-color: #005359" data-role="tile" data-size="medium" id="contacts_loc">Hello</div>
+        <div style="background-color: #90C057" data-role="tile" data-size="wide">
+            <span class="tile-header">NEIGHBORHOOD COUNCIL</span>
+            <div id="contacts_nc"></div>
+        </div>
+        <div style="background-color: #90C057" data-role="tile" data-size="wide">
+            <span class="tile-header">CITY COUNCIL</span>
+                <div id="contacts_cc"></div>
+        </div>
+        <div style="background-color: #005359" data-role="tile" data-size="medium" id="contacts_bas">Hello</div>
+        <div style="background-color: #017138" data-role="tile" data-size="wide">
+            <span class="tile-header">COUNTY SUPERVISOR</span>
+            <div id="contacts_cs"></div>
+        </div>
+        <div style="background-color: #017138" data-role="tile" data-size="wide">
+            <span class="tile-header">CALIFORNIA ASSEMBLY</span>
+            <div id="contacts_caa"></div>
+        </div>
+        <div style="background-color: #017138" data-role="tile" data-size="wide">
+            <span class="tile-header">CALIFORNIA SENATE</span>
+            <div id="contacts_cas"></div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.metroui.org.ua/v4/js/metro.min.js"></script>
 </body>
 </html>
