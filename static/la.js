@@ -36,9 +36,9 @@ let activeLayer = 'Neighborhood Councils';
 
 let neighborhoodCouncilLabel = 'Neighborhood Councils';
 let laCityCouncilLabel = 'LA City Councils';
-let laCountySupervisorLable = 'LA County Supervisor Districts';
+let laCountySupervisorLabel = 'LA County Supervisor Districts';
 let caHouseLabel = 'California Assembly';
-let caSenateLable = 'California Senate';
+let caSenateLabel = 'California Senate';
 
 let neighborhoodCouncilLayer;
 let laCityCouncilLayer;
@@ -110,11 +110,11 @@ function prep_map() {
     });
 
     let overlays = {
-        neighborhoodCouncilLabel: neighborhoodCouncilLayer,
-        laCityCouncilLabel: laCityCouncilLayer,
-        laCountySupervisorLable: laCountySupervisorLayer,
-        caHouseLabel: caHouseLayer,
-        caSenateLable: caSenateLayer
+        [neighborhoodCouncilLabel]: neighborhoodCouncilLayer,
+        [laCityCouncilLabel]: laCityCouncilLayer,
+        [laCountySupervisorLabel]: laCountySupervisorLayer,
+        [caHouseLabel]: caHouseLayer,
+        [caSenateLabel]: caSenateLayer
     };
 
     map = L.map('los_angeles',
@@ -126,7 +126,7 @@ function prep_map() {
 
     L.control.scale().addTo(map);
     L.control.layers(overlays, null, {collapsed:false}).addTo(map);
-    $('.leaflet-control-layers-base').prepend("<h6 id='layer_header'>Select a Map Layer</h6>");
+    $('.leaflet-control-layers-base').prepend('<h6 id="layer_header">Select a Map Layer</h6>');
     // control that shows state info on hover
     info = L.control();
 
@@ -371,12 +371,12 @@ function generatePopupContent(props) {
         case neighborhoodCouncilLabel:
             return generateNCSnippet(props);
         case laCityCouncilLabel:
+            return generataeCCSnippet(props);
+        case laCountySupervisorLabel:
             return generateSDSnippet(props);
-        case laCountySupervisorLable:
-            return generateCSSnippet(props);
         case caHouseLabel:
             return generateCHSnippet(props);
-        case caSenateLable:
+        case caSenateLabel:
             return generateCSSnippet(props);
     }
 
@@ -384,7 +384,6 @@ function generatePopupContent(props) {
 function zoomToFeatureAndPopup(e) {
     map.fitBounds(e.target.getBounds());
 
-    console.log(e);
     let props = e.target.feature.properties;
     let popupContent = generatePopupContent(props);
     popup
@@ -394,6 +393,7 @@ function zoomToFeatureAndPopup(e) {
 }
 
 function onBaselayerChange(e) {
+    popup.remove(map);
     activeLayer = e.name;
     document.getElementById('info_header').innerHTML = activeLayer;
 }
