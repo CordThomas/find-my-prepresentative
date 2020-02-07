@@ -21,41 +21,25 @@ div {
 }
 .tiles-grid {
     position: relative;
-    display: grid;
-    grid-template-columns: repeat(auto-fit,70px);
-    grid-template-rows: repeat(auto-fit,70px);
-    grid-gap: 10px;
+    display: block;
 }
 .tile-medium {
     width: 150px;
     height: 150px;
+    margin: 4px;
+    float:  left;
 }
-.tiles-grid .tile-medium {
-    grid-column: span 2;
-    grid-row: span 2;
-}
-.tiles-grid .tile-wide {
-    grid-column: span 4;
-    grid-row: span 2;
-}
+
 .tile-wide {
     width: 310px;
     height: 150px;
-}
-.tile-app, .tile-large, .tile-medium, .tile-small, .tile-wide {
-    display: block;
-    -webkit-box-shadow: inset 0 0 1px #ffc;
-    box-shadow: inset 0 0 1px #ffc;
-    position: relative;
-    overflow: hidden;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    max-width: none!important;
+    margin: 3px;
+    float:  left;
 }
 *, ::after, ::before {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
 }
 .tile-medium, .tile-wide  {color: ivory; padding: 0 0.4rem;}
+
+.clear {clear: right;}
