@@ -30,10 +30,17 @@
 
 let map;
 let info;
+let popup = L.popup();
 
-let activeLayer = 'Greater Los Angeles Jurisdictions';
+let activeLayer = 'Neighborhood Councils';
 
-let neighborCouncilLayer;
+let neighborhoodCouncilLabel = 'Neighborhood Councils';
+let laCityCouncilLabel = 'LA City Councils';
+let laCountySupervisorLable = 'LA County Supervisor Districts';
+let caHouseLabel = 'California Assembly';
+let caSenateLable = 'California Senate';
+
+let neighborhoodCouncilLayer;
 let laCityCouncilLayer;
 let laCountySupervisorLayer;
 let caHouseLayer;
@@ -71,7 +78,7 @@ function prep_map() {
     // Now load the jurisdictional / legislative boundary layers
     let legislativeLayerGroup = L.layerGroup();
 
-    neighborCouncilLayer = new L.GeoJSON.AJAX(nc_layer_url, {
+    neighborhoodCouncilLayer = new L.GeoJSON.AJAX(nc_layer_url, {
 
         onEachFeature: forEachFeature,
         style: nc_style
@@ -102,25 +109,24 @@ function prep_map() {
 
     });
 
-
     let overlays = {
-        "Neighborhood Councils": neighborCouncilLayer,
-        "LA City Councils": laCityCouncilLayer,
-        "LA County Supervisor Districts": laCountySupervisorLayer,
-        "California Assembly": caHouseLayer,
-        "California Senate": caSenateLayer
+        neighborhoodCouncilLabel: neighborhoodCouncilLayer,
+        laCityCouncilLabel: laCityCouncilLayer,
+        laCountySupervisorLable: laCountySupervisorLayer,
+        caHouseLabel: caHouseLayer,
+        caSenateLable: caSenateLayer
     };
 
     map = L.map('los_angeles',
     {
         center: [33.988744, -118.255603],
         zoom : 10,
-        layers : [tileLayer, neighborCouncilLayer]
+        layers : [tileLayer, neighborhoodCouncilLayer]
     });
 
     L.control.scale().addTo(map);
     L.control.layers(overlays, null, {collapsed:false}).addTo(map);
-    $('.leaflet-control-layers-base').prepend("<h6 id='info_header'>Select a Map Layer</h6>");
+    $('.leaflet-control-layers-base').prepend("<h6 id='layer_header'>Select a Map Layer</h6>");
     // control that shows state info on hover
     info = L.control();
 
@@ -137,9 +143,9 @@ function prep_map() {
                     : (props.SUP_DIST_N ? generateSDSnippet(props)
                         : (props.LSAD && props.LSAD === 'L3' ? generateCHSnippet(props)
                             : (props.LSAD && props.LSAD === 'LU' ? generateCSSnippet(props)
-                                : 'Hoover over a district')))))
+                                : 'Hoover over a district to learn more about it.')))))
 
-            : 'Hover over a district');
+            : 'Hover over a district to learn more about it.');
     };
 
     info.addTo(map);
@@ -228,7 +234,7 @@ function generateCSSnippet(props) {
  */
 function showRelatedRepresentatives(latlng) {
 
-    let res = leafletPip.pointInLayer(latlng, neighborCouncilLayer);
+    let res = leafletPip.pointInLayer(latlng, neighborhoodCouncilLayer);
     if (res.length) {
         html = '<b>NC ID: ' + res[0].feature.properties.NC_ID + '</b><br />';
         html += '<b>' + res[0].feature.properties.NAME + '</b><br />';
@@ -274,7 +280,7 @@ function forEachFeature(feature, layer) {
     layer.on({
         mouseover: highlightFeature,
         mouseout: resetHighlight,
-        click: zoomToFeature
+        click: zoomToFeatureAndPopup
     });
 }
 
@@ -356,12 +362,35 @@ function highlightFeature(e) {
 }
 
 function resetHighlight(e) {
-    neighborCouncilLayer.resetStyle(e.target);
+    neighborhoodCouncilLayer.resetStyle(e.target);
     info.update();
 }
 
-function zoomToFeature(e) {
+function generatePopupContent(props) {
+    switch (activeLayer) {
+        case neighborhoodCouncilLabel:
+            return generateNCSnippet(props);
+        case laCityCouncilLabel:
+            return generateSDSnippet(props);
+        case laCountySupervisorLable:
+            return generateCSSnippet(props);
+        case caHouseLabel:
+            return generateCHSnippet(props);
+        case caSenateLable:
+            return generateCSSnippet(props);
+    }
+
+}
+function zoomToFeatureAndPopup(e) {
     map.fitBounds(e.target.getBounds());
+
+    console.log(e);
+    let props = e.target.feature.properties;
+    let popupContent = generatePopupContent(props);
+    popup
+        .setLatLng(e.latlng)
+        .setContent(popupContent)
+        .openOn(map);
 }
 
 function onBaselayerChange(e) {

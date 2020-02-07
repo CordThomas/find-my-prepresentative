@@ -1,5 +1,5 @@
 #header {text-align: center; font-family: Averta W01 Regular,sans-serif; font-size: 30px; font-weight: 400; font-style: normal; color: #017138; padding: 10px 0 10px 0;}
-
+#source, #source a {text-align: right; font-family: Averta W01 Regular,sans-serif; font-size: 12px; font-weight: 100; font-style: normal; color: rgba(1, 164, 69, 0.35); padding:  0 5px 5px 0; float: right;}
 .content {width: 960px; margin:0 auto;}
 #los_angeles { height: 720px; width: 960px }
 
@@ -13,6 +13,7 @@
 #contacts_data a, #contacts_use a {color: ivory; text-decoration: none;}
 #contacts_data h6, #contacts_use h6, .tile-medium h6, .tile-wide h6 {color: ivory; margin: 0.4rem 0.4rem; font-size: 18px; font-weight: bold;}
 
+/* To support the tiles - from metrotile */
 div {
     margin: 0;
     border: 0;
