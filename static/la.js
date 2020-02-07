@@ -31,6 +31,8 @@
 let map;
 let info;
 
+let activeLayer = 'Greater Los Angeles Jurisdictions';
+
 let neighborCouncilLayer;
 let laCityCouncilLayer;
 let laCountySupervisorLayer;
@@ -105,7 +107,7 @@ function prep_map() {
         "Neighborhood Councils": neighborCouncilLayer,
         "LA City Councils": laCityCouncilLayer,
         "LA County Supervisor Districts": laCountySupervisorLayer,
-        "California House of Representatives": caHouseLayer,
+        "California Assembly": caHouseLayer,
         "California Senate": caSenateLayer
     };
 
@@ -118,7 +120,7 @@ function prep_map() {
 
     L.control.scale().addTo(map);
     L.control.layers(overlays, null, {collapsed:false}).addTo(map);
-
+    $('.leaflet-control-layers-base').prepend("<h6 id='info_header'>Select a Map Layer</h6>");
     // control that shows state info on hover
     info = L.control();
 
@@ -129,7 +131,7 @@ function prep_map() {
     };
 
     info.update = function (props) {
-        this._div.innerHTML = '<h6>Greater Los Angeles Political Jurisdictions</h6>' +  (props ?
+        this._div.innerHTML = '<h6 id="info_header">' + activeLayer + '</h6>' +  (props ?
             (props.NC_ID ? generateNCSnippet(props)
                 : (props.dist_name ? generataeCCSnippet(props)
                     : (props.SUP_DIST_N ? generateSDSnippet(props)
@@ -192,6 +194,8 @@ function prep_map() {
 		    showRelatedRepresentatives(latlng);
         }
 	}) );
+
+    map.on('baselayerchange', onBaselayerChange);
 
 }
 
@@ -360,4 +364,7 @@ function zoomToFeature(e) {
     map.fitBounds(e.target.getBounds());
 }
 
-
+function onBaselayerChange(e) {
+    activeLayer = e.name;
+    document.getElementById('info_header').innerHTML = activeLayer;
+}

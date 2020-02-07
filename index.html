@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="static/leaflet.css" />
     <link rel="stylesheet" href="static/leaflet-search.min.css" />
-    <link rel="stylesheet" href="https://cdn.metroui.org.ua/v4.3.2/css/metro-all.min.css">
+
     <link rel="stylesheet" href="static/la.css" />
     <script src="static/jquery-3.4.1.min.js"></script>
     <script src="static/leaflet.js"></script>
@@ -21,27 +21,39 @@
     <div id="los_angeles"></div>
     <!-- colors from https://color.adobe.com/explore?page=1 -->
     <div class="tiles-grid" id="contacts">
-        <div style="background-color: #005359" data-role="tile" data-size="medium" id="contacts_loc">Hello</div>
-        <div style="background-color: #90C057" data-role="tile" data-size="wide">
-            <span class="tile-header">NEIGHBORHOOD COUNCIL</span>
-            <div id="contacts_nc"></div>
+        <div style="background-color: #005359" data-role="tile" data-size="medium" id="contacts_use">
+            <h6>How to Use</h6>
+            Select your layer and mouse over the districts to explore<br />
+            Search for an address and get all the information
+
         </div>
         <div style="background-color: #90C057" data-role="tile" data-size="wide">
-            <span class="tile-header">CITY COUNCIL</span>
-                <div id="contacts_cc"></div>
+            <h6>NEIGHBORHOOD COUNCIL</h6>
+            <div id="contacts_nc">Once you search above, we will present you with the details about the related Neighborhood Council</div>
         </div>
-        <div style="background-color: #005359" data-role="tile" data-size="medium" id="contacts_bas">Hello</div>
-        <div style="background-color: #017138" data-role="tile" data-size="wide">
-            <span class="tile-header">COUNTY SUPERVISOR</span>
-            <div id="contacts_cs"></div>
+        <div style="background-color: #90C057" data-role="tile" data-size="wide">
+            <h6>CITY COUNCIL</h6>
+                <div id="contacts_cc">Once you search above, we will present you with the details about the related City Council</div>
+        </div>
+        <div style="background-color: #005359" data-role="tile" data-size="medium" id="contacts_data">
+            <h6>Data Sources</h6>
+            <a href="https://data.lacity.org/A-Well-Run-City/Neighborhood-Councils-Certified-/fu65-dz2f">Neighbor Council</a><br />
+            <a href="https://data.lacity.org/A-Well-Run-City/Council-Districts/5v3h-vptv">City Council</a><br />
+            <a href="https://egis3.lacounty.gov/dataportal/2011/12/06/supervisorial-districts/">County Supervisor</a><br />
+            <a href="https://catalog.data.gov/dataset/tiger-line-shapefile-2018-state-california-current-state-legislative-district-sld-lower-chamber">California Assembly</a><br />
+            <a href="https://catalog.data.gov/dataset/tiger-line-shapefile-2018-state-california-current-state-legislative-district-sld-upper-chamber">California Senate</a>
         </div>
         <div style="background-color: #017138" data-role="tile" data-size="wide">
-            <span class="tile-header">CALIFORNIA ASSEMBLY</span>
-            <div id="contacts_caa"></div>
+            <h6>COUNTY SUPERVISOR</h6>
+            <div id="contacts_cs">Once you search above, we will present you with the details about the related County Supervisor</div>
         </div>
         <div style="background-color: #017138" data-role="tile" data-size="wide">
-            <span class="tile-header">CALIFORNIA SENATE</span>
-            <div id="contacts_cas"></div>
+            <h6>CALIFORNIA ASSEMBLY</h6>
+            <div id="contacts_caa">Once you search above, we will present you with the details about the related California Assembly</div>
+        </div>
+        <div style="background-color: #017138" data-role="tile" data-size="wide">
+            <h6>CALIFORNIA SENATE</h6>
+            <div id="contacts_cas">Once you search above, we will present you with the details about the related California Senate</div>
         </div>
     </div>
 </div>

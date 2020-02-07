@@ -1,10 +1,60 @@
 #header {text-align: center; font-family: Averta W01 Regular,sans-serif; font-size: 30px; font-weight: 400; font-style: normal; color: #017138; padding: 10px 0 10px 0;}
 
-.content {width: 960px}
+.content {width: 960px; margin:0 auto;}
 #los_angeles { height: 720px; width: 960px }
 
-.info { padding: 6px 8px; font: 14px/16px Arial, Helvetica, sans-serif; background: white; background: rgba(255,255,255,0.8); box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 5px; } .info h4 { margin: 0 0 5px; color: #777; }
+.leaflet-control-layers {font: 14px/16px Arial, Helvetica; background: rgba(255,255,255,0.8);width: 300px; }
+.leaflet-bar a,.leaflet-bar a:hover {height: 34px; width: 34px; padding-top: 3px}
+.info { padding: 6px 8px; font: 14px/16px Arial, Helvetica, sans-serif; background: white; background: rgba(255,255,255,0.8); box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 5px; width: 300px; }
+.info h6, .leaflet-control-layers h6 { margin: 0 0 5px; color: #777; font-size: 1.1em;}
 .legend { text-align: left; line-height: 18px; color: #555; } .legend i { width: 18px; height: 18px; float: left; margin-right: 8px; opacity: 0.7; }
 
-#contacts {text-align: left; line-height: 20px; color: #1940cf; font: 16px Cambria; height: 100px; position: relative; top: 20px; }
+#contacts {text-align: left; color: #1940cf; font: 16px Cambria; height: 100px; position: relative; top: 20px; padding-left: 6px;}
+#contacts_data a, #contacts_use a {color: ivory; text-decoration: none;}
+#contacts_data h6, #contacts_use h6, .tile-medium h6, .tile-wide h6 {color: ivory; margin: 0.4rem 0.4rem; font-size: 18px; font-weight: bold;}
 
+div {
+    margin: 0;
+    border: 0;
+    vertical-align: baseline;
+}
+.tiles-grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(auto-fit,70px);
+    grid-template-rows: repeat(auto-fit,70px);
+    grid-gap: 10px;
+}
+.tile-medium {
+    width: 150px;
+    height: 150px;
+}
+.tiles-grid .tile-medium {
+    grid-column: span 2;
+    grid-row: span 2;
+}
+.tiles-grid .tile-wide {
+    grid-column: span 4;
+    grid-row: span 2;
+}
+.tile-wide {
+    width: 310px;
+    height: 150px;
+}
+.tile-app, .tile-large, .tile-medium, .tile-small, .tile-wide {
+    display: block;
+    -webkit-box-shadow: inset 0 0 1px #ffc;
+    box-shadow: inset 0 0 1px #ffc;
+    position: relative;
+    overflow: hidden;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    max-width: none!important;
+}
+*, ::after, ::before {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.tile-medium, .tile-wide  {color: ivory; padding: 0 0.4rem;}
