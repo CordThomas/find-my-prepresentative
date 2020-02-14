@@ -32,19 +32,25 @@ let map;
 let info;
 let popup = L.popup();
 
-let activeLayer = 'Neighborhood Councils';
-
 let neighborhoodCouncilLabel = 'Neighborhood Councils';
 let laCityCouncilLabel = 'LA City Councils';
 let laCountySupervisorLabel = 'LA County Supervisor Districts';
 let caHouseLabel = 'California Assembly';
 let caSenateLabel = 'California Senate';
 
+let activeLayer = neighborhoodCouncilLabel;
+
 let neighborhoodCouncilLayer;
 let laCityCouncilLayer;
 let laCountySupervisorLayer;
 let caHouseLayer;
 let caSenateLayer;
+
+let neighborhoodCouncilStyle = 'nc_style';
+let laCityCouncilStyle = 'cc_style';
+let laCountySupervisorStyle = 'cs_style';
+let caHouseStyle = 'cah_style';
+let caSenateStyle = 'cas_style';
 
 // Los Angeles Neighborhood Councils
 // Source:  https://data.lacity.org/A-Well-Run-City/Neighborhood-Councils-Certified-/fu65-dz2f
@@ -99,13 +105,13 @@ function prep_map() {
     caHouseLayer = new L.GeoJSON.AJAX(ca_house_layer_url, {
 
         onEachFeature: forEachFeature,
-        style: cs_style
+        style: cah_style
 
     });
     caSenateLayer = new L.GeoJSON.AJAX(ca_senate_layer_url, {
 
         onEachFeature: forEachFeature,
-        style: cs_style
+        style: cas_style
 
     });
 
@@ -218,7 +224,7 @@ function generateSDSnippet(props) {
            '<a href="'+ props.website + '">' + props.website + '</a>'
 }
 function generateCHSnippet(props) {
-    return '<b>' + props.NAMELSAD + '</b><br />Assembly District #' + props.SLDLST + '<br />' +
+    return '<b>' + props.NAMELSAD + '</b><br />' +
            'Assembly menber: ' + props.member + '<br />' +
            '<a href="'+ props.website + '">' + props.website + '</a>'
 }
@@ -276,12 +282,41 @@ function showRelatedRepresentatives(latlng) {
 
 }
 
+
+function getFeatureLabel(feature, style_name) {
+    let labelValue = '';
+    switch (style_name) {
+        case neighborhoodCouncilStyle:
+            labelValue = feature.properties.NC_ID ? feature.properties.NC_ID.toString() : '';
+            break;
+        case laCityCouncilStyle:
+            labelValue = feature.properties.district_i ? feature.properties.district_i.toString() : '';
+            break;
+        case laCountySupervisorStyle:
+            labelValue = feature.properties.SUP_DIST_N ? feature.properties.SUP_DIST_N : '';
+            break;
+        case caHouseStyle:
+            labelValue = feature.properties.SLDLST ? feature.properties.SLDLST : '';
+            break;
+        case caSenateStyle:
+            labelValue = feature.properties.SLDUST ? feature.properties.SLDUST : '';
+            break;
+    }
+    return labelValue;
+}
+
 function forEachFeature(feature, layer) {
+
+    let featureLabel = getFeatureLabel(feature, layer.defaultOptions.style.name);
+    let permanentLabel = layer.defaultOptions.style.name !== neighborhoodCouncilStyle;
+    layer.bindTooltip(featureLabel,{permanent: permanentLabel, className: 'custom-popup'}).openTooltip();
+
     layer.on({
         mouseover: highlightFeature,
         mouseout: resetHighlight,
         click: zoomToFeatureAndPopup
     });
+
 }
 
 // Generate a random hex color - from https://www.paulirish.com/2009/random-hex-color-code-snippets/

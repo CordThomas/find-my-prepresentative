@@ -51,6 +51,10 @@ search dialog in the top left to locate an address, zoom to it and then you will
 all the details of representatives for that address
 
 ## Searching in Find My Representative
+
+Start typing an address into the search box.  An example, 105 N Rossmore Ave, Los Angeles.  Click on the address
+that matches the address you are looking for and then see the results in the area below the map.
+
 ![Image](https://github.com/CordThomas/find-my-prepresentative/blob/master/images/find-my-representative-search.png)
 
 ## Detailed results from the search

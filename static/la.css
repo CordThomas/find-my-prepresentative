@@ -3,13 +3,32 @@
 .content {width: 960px; margin:0 auto;}
 #los_angeles { height: 720px; width: 960px }
 
+.custom-popup .leaflet-tooltipr {
+  background:#2c3e50;
+  color:#fff;
+  font-size:16px;
+  line-height:24px;
+  border-radius: 0;
+  }
+.custom-popup .leaflet-popup-content-wrapper a {
+    color:rgba(255,255,255,0.1);
+  }
+.custom-popup .leaflet-popup-tip-container {
+  width:30px;
+  height:15px;
+  }
+.custom-popup .leaflet-popup-tip {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+  }
 .leaflet-control-layers {font: 14px/16px Arial, Helvetica; background: rgba(255,255,255,0.8);width: 300px; }
 .leaflet-bar a,.leaflet-bar a:hover {height: 34px; width: 34px; padding-top: 3px}
 .info { padding: 6px 8px; font: 14px/16px Arial, Helvetica, sans-serif; background: white; background: rgba(255,255,255,0.8); box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 5px; width: 300px; }
 .info h6, .leaflet-control-layers h6 { margin: 0 0 5px; color: #777; font-size: 1.1em;}
 .legend { text-align: left; line-height: 18px; color: #555; } .legend i { width: 18px; height: 18px; float: left; margin-right: 8px; opacity: 0.7; }
 
-#contacts {text-align: left; color: #1940cf; font: 16px Cambria; height: 100px; position: relative; top: 20px; padding-left: 6px;}
+#contacts {text-align: left; color: #1940cf; font: 14px 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif; height: 100px; position: relative; top: 20px; padding-left: 6px;}
 #contacts_data a, #contacts_use a {color: ivory; text-decoration: none;}
 #contacts_data h6, #contacts_use h6, .tile-medium h6, .tile-wide h6 {color: ivory; margin: 0.4rem 0.4rem; font-size: 18px; font-weight: bold;}
 
@@ -40,6 +59,6 @@ div {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
 }
-.tile-medium, .tile-wide  {color: ivory; padding: 0 0.4rem;}
+.tile-medium, .tile-wide  {color: ivory; padding: 0 0.4rem; word-wrap: break-word;}
 
 .clear {clear: right;}
