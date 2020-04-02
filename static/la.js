@@ -34,6 +34,7 @@ let popup = L.popup();
 
 let neighborhoodCouncilLabel = 'Neighborhood Councils';
 let laCityCouncilLabel = 'LA City Councils';
+let laLAUSDLabel = 'LAUSD Districts';
 let laCountySupervisorLabel = 'LA County Supervisor Districts';
 let caHouseLabel = 'California Assembly';
 let caSenateLabel = 'California Senate';
@@ -43,12 +44,14 @@ let activeLayer = neighborhoodCouncilLabel;
 let neighborhoodCouncilLayer;
 let laCityCouncilLayer;
 let laCountySupervisorLayer;
+let laLAUSDLayer;
 let caHouseLayer;
 let caSenateLayer;
 
 let neighborhoodCouncilStyle = 'nc_style';
 let laCityCouncilStyle = 'cc_style';
 let laCountySupervisorStyle = 'cs_style';
+let laLAUSDStyle = 'cu_style';
 let caHouseStyle = 'cah_style';
 let caSenateStyle = 'cas_style';
 
@@ -60,6 +63,9 @@ const nc_layer_url = 'data/la_neighborhood_council_districts.geojson';
 const la_city_council_layer_url = 'data/la_city_council_districts.geojson';
 // Los Angeles County Supervisorial Districts - 2011
 // Source:  https://egis3.lacounty.gov/dataportal/2011/12/06/supervisorial-districts/ - under Download data
+const la_usd_district_layer_url = 'data/la_lausd_districts.geojson';
+// LAUSD Board of Education Districts - 2019
+// Source:  http://geohub.lacity.org/datasets/lausd-board-of-education-districts
 const la_county_supervisors_layer_url = 'data/la_county_supervisorial_districs.geojson';
 // California House of Representatives also known as the Lower Chamber
 // GIS Source:  ﻿https://catalog.data.gov/dataset/tiger-line-shapefile-2018-state-california-current-state-legislative-district-sld-lower-chamber
@@ -96,6 +102,12 @@ function prep_map() {
         style: cc_style
 
     });
+    laLAUSDLayer = new L.GeoJSON.AJAX(la_usd_district_layer_url, {
+
+        onEachFeature: forEachFeature,
+        style: cu_style
+
+    });
     laCountySupervisorLayer = new L.GeoJSON.AJAX(la_county_supervisors_layer_url, {
 
         onEachFeature: forEachFeature,
@@ -118,6 +130,7 @@ function prep_map() {
     let overlays = {
         [neighborhoodCouncilLabel]: neighborhoodCouncilLayer,
         [laCityCouncilLabel]: laCityCouncilLayer,
+        [laLAUSDLabel]: laLAUSDLayer,
         [laCountySupervisorLabel]: laCountySupervisorLayer,
         [caHouseLabel]: caHouseLayer,
         [caSenateLabel]: caSenateLayer
@@ -146,10 +159,11 @@ function prep_map() {
         this._div.innerHTML = '<h6 id="info_header">' + activeLayer + '</h6>' +  (props ?
             (props.NC_ID ? generateNCSnippet(props)
                 : (props.dist_name ? generataeCCSnippet(props)
-                    : (props.SUP_DIST_N ? generateSDSnippet(props)
-                        : (props.LSAD && props.LSAD === 'L3' ? generateCHSnippet(props)
-                            : (props.LSAD && props.LSAD === 'LU' ? generateCSSnippet(props)
-                                : 'Hoover over a district to learn more about it.')))))
+                    : (props.MEMBER ? generateCUSnippet(props)
+                        : (props.SUP_DIST_N ? generateSDSnippet(props)
+                            : (props.LSAD && props.LSAD === 'L3' ? generateCHSnippet(props)
+                                : (props.LSAD && props.LSAD === 'LU' ? generateCSSnippet(props)
+                                    : 'Hoover over a district to learn more about it.'))))))
 
             : 'Hover over a district to learn more about it.');
     };
@@ -162,6 +176,7 @@ function prep_map() {
         'https://catalog.data.gov/dataset/tiger-line-shapefile-2018-state-california-current-' +
         'state-legislative-district-sld-lower-chamber">CA Assembly</a>, <a href="' +
         'https://egis3.lacounty.gov/dataportal/2011/12/06/supervisorial-districts/">LA County</a>, <a href="' +
+        'http://geohub.lacity.org/datasets/lausd-board-of-education-districts">LAUSD</a>, <a href="' +
         'https://data.lacity.org/A-Well-Run-City/Council-Districts/5v3h-vptv">City Council</a>, <a href="' +
         'https://data.lacity.org/A-Well-Run-City/Neighborhood-Councils-Certified-/fu65-dz2f">Neighborhood Councils</a>'
 
@@ -218,6 +233,10 @@ function generateNCSnippet(props) {
 function generataeCCSnippet(props) {
     return '<b>' + props.dist_name + '</b><br />City District #' + props.district_i + '<br />' +
            '<a href="'+ props.website + '">' + props.website + '</a>'
+}
+function generateCUSnippet(props) {
+    return '<b>' + props.MEMBER + '</b><br />LAUSD District #' + props.DISTRICT + '<br />' +
+           '<a href="'+ props.WEBSITE + '">' + props.WEBSITE + '</a>'
 }
 function generateSDSnippet(props) {
     return '<b>' + props.supervisor + '</b><br />City District #' + props.SUP_DIST_N + '<br />' +
@@ -292,6 +311,9 @@ function getFeatureLabel(feature, style_name) {
         case laCityCouncilStyle:
             labelValue = feature.properties.district_i ? feature.properties.district_i.toString() : '';
             break;
+        case laLAUSDStyle:
+            labelValue = feature.properties.DISTRICT.toString() ? feature.properties.DISTRICT.toString() : '';
+            break;
         case laCountySupervisorStyle:
             labelValue = feature.properties.SUP_DIST_N ? feature.properties.SUP_DIST_N : '';
             break;
@@ -340,6 +362,17 @@ function cs_style(feature) {
         weight: 1,
         opacity: 1,
         color: 'green',
+        dashArray: '1',
+        fillOpacity: 0.7,
+        fillColor: getRandomColor()
+    };
+}
+
+function cu_style(feature) {
+    return {
+        weight: 1,
+        opacity: 1,
+        color: 'red',
         dashArray: '1',
         fillOpacity: 0.7,
         fillColor: getRandomColor()
@@ -407,6 +440,8 @@ function generatePopupContent(props) {
             return generateNCSnippet(props);
         case laCityCouncilLabel:
             return generataeCCSnippet(props);
+        case laLAUSDLabel:
+            return generateCUSnippet(props);
         case laCountySupervisorLabel:
             return generateSDSnippet(props);
         case caHouseLabel:
